@@ -6,7 +6,7 @@
 /*   By: npizzi <npizzi@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 10:29:11 by npizzi            #+#    #+#             */
-/*   Updated: 2024/11/21 12:48:08 by npizzi           ###   ########.fr       */
+/*   Updated: 2024/11/21 16:18:01 by npizzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void ft_free_all(t_philosopher **head, t_param_data **data)
             break;        
     }
     pthread_mutex_destroy(&(*data)->display_mutex);
-    pthread_mutex_destroy(&(*data)->last_meal_mutex);
+    pthread_mutex_destroy(&(*data)->update_mutex);
     pthread_mutex_destroy(&(*data)->bool_mutex);
     free(*data);
     *data = NULL;
@@ -75,8 +75,11 @@ t_philosopher  *init_philo(t_param_data *data)
         node->next->previous = node;
         node = node->next;
     }
-    node->next = head;
-    head->previous = node;
+    if (node != head)
+    {
+        node->next = head;
+        head->previous = node;
+    }
     return (head);
 }
 

@@ -6,7 +6,7 @@
 /*   By: npizzi <npizzi@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 10:34:45 by npizzi            #+#    #+#             */
-/*   Updated: 2024/11/21 13:03:23 by npizzi           ###   ########.fr       */
+/*   Updated: 2024/11/21 15:45:22 by npizzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ t_param_data *init_data_struct(int argc, char *argv[])
 
     data = malloc(sizeof (t_param_data));
     if (data == NULL)
-        return (printf("MEMORY ALLOCATION ERROR\n"), NULL);
+        return (printf("Memory allocation error\n"), NULL);
     data->is_phil_dead = false;
     data->philosophers_number = simple_atoi(argv[1]);
     data->die_time = simple_atoi(argv[2]);
@@ -89,9 +89,9 @@ t_param_data *init_data_struct(int argc, char *argv[])
         data->how_many_spaghetti = -1;
     if (pthread_mutex_init(&data->display_mutex, NULL) != 0)
         return (free(data), NULL);
-    if (pthread_mutex_init(&data->last_meal_mutex, NULL) != 0)
+    if (pthread_mutex_init(&data->update_mutex, NULL) != 0)
         return (pthread_mutex_destroy(&data->display_mutex), free(data), NULL);
     if (pthread_mutex_init(&data->bool_mutex, NULL) != 0)
-        return (pthread_mutex_destroy(&data->last_meal_mutex), pthread_mutex_destroy(&data->display_mutex), free(data), NULL);
+        return (pthread_mutex_destroy(&data->update_mutex), pthread_mutex_destroy(&data->display_mutex), free(data), NULL);
     return (data);
 }

@@ -6,7 +6,7 @@
 /*   By: npizzi <npizzi@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 11:31:07 by npizzi            #+#    #+#             */
-/*   Updated: 2024/11/21 12:59:21 by npizzi           ###   ########.fr       */
+/*   Updated: 2024/11/21 16:54:27 by npizzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ void    take_forks(t_philosopher *phil, t_param_data *data, size_t starting_mill
     }
     else
     {
-        if (data->philosophers_number % 2 == 0)
-            ft_usleep(1, data);
+        ft_usleep(1, data);
         pthread_mutex_lock(&phil->fork_mutex);
         locked_printing(starting_milliseconds, phil_num, data, "has taken a fork");
         pthread_mutex_lock(&phil->next->fork_mutex);
@@ -60,13 +59,13 @@ void    *dinner(void *philosopher_head)
     phil_num = phil ->philosopher_num;
     take_forks(phil, data, starting_milliseconds, phil_num);
     locked_printing(starting_milliseconds, phil_num, data, "is eating");
-    pthread_mutex_lock(&phil->data->last_meal_mutex);
+    pthread_mutex_lock(&phil->data->update_mutex);
     phil->last_meal = get_time_in_milliseconds();
-    pthread_mutex_unlock(&phil->data->last_meal_mutex);
+    phil->spaghetti_eaten+=1; 
+    pthread_mutex_unlock(&phil->data->update_mutex);
     ft_usleep(data->eat_time, data);
     pthread_mutex_unlock(&phil->fork_mutex);
     pthread_mutex_unlock(&phil->next->fork_mutex);
-    phil->spaghetti_eaten+=1; 
     if (phil->spaghetti_eaten == data->how_many_spaghetti)
         return (NULL);
     if (read_or_update_death(data, 'r') == false)

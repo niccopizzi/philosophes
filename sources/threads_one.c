@@ -6,7 +6,7 @@
 /*   By: npizzi <npizzi@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:20:23 by npizzi            #+#    #+#             */
-/*   Updated: 2024/11/21 12:26:26 by npizzi           ###   ########.fr       */
+/*   Updated: 2024/11/21 16:54:38 by npizzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,18 +42,18 @@ void    *death_check_routine(void *phil_head)
     die_time = ptr ->data ->die_time;
     while(true)
     {
-        pthread_mutex_lock(&ptr->data->last_meal_mutex);
+        pthread_mutex_lock(&ptr->data->update_mutex);
         phil = get_last_meal(ptr);
         if (phil ->spaghetti_eaten == phil ->data ->how_many_spaghetti)
-            return (pthread_mutex_unlock(&ptr->data->last_meal_mutex), NULL);
+            return (pthread_mutex_unlock(&ptr->data->update_mutex), NULL);
         current_time = get_time_in_milliseconds();
         if (current_time - phil->last_meal >= die_time)
         {
             locked_printing (phil->data->starting_milliseconds, phil->philosopher_num, phil->data, "died");
-            return (pthread_mutex_unlock(&ptr->data->last_meal_mutex), NULL);
+            return ( pthread_mutex_unlock(&ptr->data->update_mutex), NULL);
         }
-        pthread_mutex_unlock(&ptr->data->last_meal_mutex);
-        usleep(100);
+        pthread_mutex_unlock(&ptr->data->update_mutex);
+        usleep(200);
     }
     return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: npizzi <npizzi@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 12:23:47 by npizzi            #+#    #+#             */
-/*   Updated: 2024/11/21 12:51:04 by npizzi           ###   ########.fr       */
+/*   Updated: 2024/11/21 16:15:22 by npizzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,11 @@ void    locked_printing(size_t begin, int phil_num, t_param_data *data, char *ac
 {
     size_t      end;
     
+    if (read_or_update_death(data, 'r') == true)
+        return ;
     pthread_mutex_lock(&data->display_mutex);
     end = get_time_in_milliseconds();
-    if (read_or_update_death(data, 'r') == false)
-        printf (MODE_BOLD "%ld %d %s\n", (end - begin) , phil_num, action);
+    printf (MODE_BOLD "%ld %d %s\n", (end - begin) , phil_num, action);
     if (action[0] == 'd')
         read_or_update_death(data, 'u');
     pthread_mutex_unlock(&data->display_mutex);

@@ -6,7 +6,7 @@
 /*   By: npizzi <npizzi@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:13:47 by npizzi            #+#    #+#             */
-/*   Updated: 2024/11/21 12:50:08 by npizzi           ###   ########.fr       */
+/*   Updated: 2024/11/21 16:07:05 by npizzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ typedef struct s_param_data
     __useconds_t            sleep_time;
     size_t                  starting_milliseconds;
     pthread_mutex_t         display_mutex;
-    pthread_mutex_t         last_meal_mutex;
+    pthread_mutex_t         update_mutex;
     pthread_mutex_t         bool_mutex;
     
 }   t_param_data;
@@ -89,7 +89,9 @@ t_param_data    *init_data_struct(int argc, char *argv[]);
 //THREADS FUNCTIONS
 
 
+int             start_the_dinner_for_one(t_philosopher *head, t_param_data *data);
 int             start_the_dinner(t_philosopher *head, t_param_data *data, int phil_num);
+void            *dinner_for_one(void *phil_head);
 void            *dinner(void *philosopher_head);
 
 //GENERAL UTILS FUNCTIONS
