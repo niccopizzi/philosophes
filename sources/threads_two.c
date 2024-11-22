@@ -6,15 +6,14 @@
 /*   By: npizzi <npizzi@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 11:31:07 by npizzi            #+#    #+#             */
-/*   Updated: 2024/11/21 16:54:27 by npizzi           ###   ########.fr       */
+/*   Updated: 2024/11/22 09:30:39 by npizzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void    take_forks(t_philosopher *phil, t_param_data *data, size_t starting_milliseconds, int phil_num)
+int    take_forks(t_philosopher *phil, t_param_data *data, size_t starting_milliseconds, int phil_num)
 {
-    
     if ((phil_num % 2 == 0))
     { 
         pthread_mutex_lock(&phil->next->fork_mutex);
@@ -30,6 +29,7 @@ void    take_forks(t_philosopher *phil, t_param_data *data, size_t starting_mill
         pthread_mutex_lock(&phil->next->fork_mutex);
         locked_printing(starting_milliseconds, phil_num, data, "has taken a fork");
     }
+    return (0);
 }
 
 void    sleep_routine(size_t starting_milliseconds, size_t sleep_time, t_philosopher *philo, t_param_data *data)
@@ -57,7 +57,8 @@ void    *dinner(void *philosopher_head)
     data = phil -> data;
     starting_milliseconds = phil->data->starting_milliseconds;
     phil_num = phil ->philosopher_num;
-    take_forks(phil, data, starting_milliseconds, phil_num);
+    if (take_forks(phil, data, starting_milliseconds, phil_num) == -1)
+        return (NULL);
     locked_printing(starting_milliseconds, phil_num, data, "is eating");
     pthread_mutex_lock(&phil->data->update_mutex);
     phil->last_meal = get_time_in_milliseconds();
@@ -72,13 +73,3 @@ void    *dinner(void *philosopher_head)
         sleep_routine (starting_milliseconds, data->sleep_time, phil, data);
     return (NULL);
 }
-
-//for case phil = 1
-    
-/*     if (phil->data->philosophers_number == 1)
-    {
-        pthread_mutex_lock(phil->fork_mutex);
-        locked_printing(phil->data->starting_milliseconds, phil, "has taken a fork");
-        ft_usleep(phil->data->die_time + 100, phil);
-        return ;
-    } */
