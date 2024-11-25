@@ -5,50 +5,33 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: npizzi <npizzi@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 09:54:59 by npizzi            #+#    #+#             */
-/*   Updated: 2024/11/22 16:26:27 by npizzi           ###   ########.fr       */
+/*   Created: 2024/11/25 11:29:51 by npizzi            #+#    #+#             */
+/*   Updated: 2024/11/25 18:13:28 by npizzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void *run_routine(void *arg)
+int main(int argc, char *argv[])
 {
-    sem_t   *routine_sem;
+    t_data          *data;
+    t_philosopher   *phil;
     
-    routine_sem = (sem_t *)arg;
-    sem_wait(routine_sem);
-    printf("Ello\n");
-    sleep(1);
-    sem_post(routine_sem);
-    return (NULL);
-}
-
-int main()
-{
-    pthread_t t_arr[20];
-    sem_t *sem;
-    
-    sem_unlink(SEM_NAME);
-    sem = sem_open(SEM_NAME, O_CREAT, 0660, 0);
-    if (sem == SEM_FAILED)
-    {
-        perror("SEM FAILED :" );
-        return(1);
-    }
-    for (int i = 0; i < 20; i++)
-    {
-        if(pthread_create(&t_arr[i], NULL, run_routine, (void *)sem) != 0)
-            perror("Error in creating the thread\n");
-    }
-
-    for (int i = 0; i < 20; i++)
-    {
-        if(pthread_join(t_arr[i], NULL) != 0)
-            perror("Error in joining the thread\n");
-    }
-
-    sem_close(sem);
-    sem_unlink(SEM_NAME);
+    if (argc < 5 || argc > 6)
+        return (printf (MODE_BOLD ANSI_COLOR_RED INVALID_PARAM_NUM_MSG ANSI_RESET) , 1);
+    if (are_args_valid(argc, argv) == false || are_arguments_in_limits(argc, argv) == false)
+        return (2);
+    sem_unlink(FORK_SEM_NAME);
+    sem_unlink(PRINT_SEM_NAME);
+    data = ft_init_data_struct(argc, argv);
+    if (data == NULL)
+        return (3);
+    phil = ft_init_philo_struct(data);
+    if (phil == NULL)
+        return (4);
+    start_the_dinner(phil, data);
+    ft_cleanup_and_exit(phil, data, 2);
+    sem_unlink(FORK_SEM_NAME);
+    sem_unlink(PRINT_SEM_NAME);
     return (0);
 }

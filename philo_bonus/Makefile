@@ -2,8 +2,11 @@ CFLAGS = -Wall -Wextra -Werror -O3 -g
 
 NAME = philo_bonus
 
-SRCS = 	main.c		\
-		
+SRCS = 	main.c			\
+		init.c			\
+		utils_one.c 	\
+		utils_two.c		\
+		dinner.c
 
 all: $(NAME)
 
